@@ -34,6 +34,12 @@ x,y = np.where(mask == 255) # retrieve the pixels
 x1, y1 = np.min(x), np.min(y) # get the starting coordinates
 x2, y2 = np.max(x), np.max(y)
 crop = gray[x1:x2, y1:y2]
-
-plt.imshow(cv2.cvtColor(crop, cv2.COLOR_BGR2RGB))
+# find out what the text says
+text = easyocr.Reader(['en']) # state which language
+text = text.readtext(crop) # read the text displayed licence plate
+# plot the result text onto the photo
+res = text[0][-2] # retrieve the needed text
+label = cv2.putText(img, res, (x1 - 200, y2 + 160), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 0, 255), 3)
+final_image = cv2.rectangle(img, (x1, x2), (y1, y2), (255, 169, 69), 3)
+plt.imshow(cv2.cvtColor(final_image, cv2.COLOR_BGR2RGB))
 plt.show()
